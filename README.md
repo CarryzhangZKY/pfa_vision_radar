@@ -1,37 +1,54 @@
-# PFA_Vision_Radar
+# 厦门理工学院PFA战队单目相机雷达站算法开源
 
-#### 介绍
-厦门理工学院单目相机雷达站算法开源
+#### 简述
+基于此算法，使用 **任意单目相机** 和 **任意运算端** ，即可实现 **雷达站的所有功能** ，主要功能如下：
+1. 机器人精确定位
+2. 视野盲区预测（辽科雷达方案优化）
+3. 标记进度显示
+4. 自主发动双倍易伤
+5. 裁判系统双向通信
+6. 支持USB相机和海康相机
 
-#### 软件架构
-软件架构说明
+#### 效果展示
 
-
-#### 安装教程
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+![全场高亮](images/image4.jpg)
+![南部雷达排名](images/image1.jpg)
+![双倍易伤](images/image2.png)
 
 
-#### 特技
+#### 配置环境
+1.  python3.9
+2.  pip install -r requirements.txt 
+3.  如果需要加速模型推理，请安装tensorrt版本>8.（安装教程网上有）
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+#### 硬件要求
+1. USB串口（另一头需接裁判系统user串口）
+2. 有GPU的运算端，推荐RTX3060以上
+
+
+#### 标定指南
+1. 每场比赛开始前，需对雷达进行标定，选择己方阵营（test模式只能为蓝方），calibration.py 374行
+2. 将相机视角调节合适后，点击“开始标定”
+3. 依次点击相机视图和地图视图 **地面** 对应对应的四组、八个点（白色）后，点击切换高度
+4. 依次点击相机视图和地图视图 **R型高地** 对应对应的四组、八个点（绿色）后，点击切换高度
+5. 依次点击相机视图和地图视图 **环型高地** 对应对应的四组、八个点后（蓝色），点击保存计算
+![标定演示](images/calibration.JPG)
+
+
+#### 运行指南（标定完成后）
+1. 更改main.py 580行的串口名
+2. 修改运行模式---'test':测试模式,'hik':海康相机,'video':USB相机（videocapture）main.py 582行，默认为test
+3. 修改己方阵营，test模式只能为蓝方，main.py 17行
+4. 运行main.py文件，出现如下图所示则运行成功（标记进度全为-1表示没有连接到裁判系统）
+![运行图例](images/image3.JPG)
+5. 在云台手端，切换飞镖锁定目标触发双倍易伤
+
+
+
+#### 注意事项
+1. 不仅可以tensorrt加速，理论上openvino也可以
+2. 可以修改多个机器人都进行盲区预测
+3. 遇到问题联系我，QQ：2728615481
+
+
+
