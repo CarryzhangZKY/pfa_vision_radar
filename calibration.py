@@ -218,39 +218,32 @@ class MyUI(QWidget):
         self.set_button_style(self.button3)
         self.set_button_style(self.button4)
 
-        # Set up the grid layout for buttons
         grid_layout = QGridLayout()
         grid_layout.addWidget(self.button1, 0, 0)
         grid_layout.addWidget(self.button2, 0, 1)
         grid_layout.addWidget(self.button3, 1, 0)
         grid_layout.addWidget(self.button4, 1, 1)
 
-        # Create a new widget to contain buttons and text
         buttons_and_text_widget = QWidget()
 
-        # Set up horizontal layout for the new widget
         hbox_buttons_and_text = QHBoxLayout(buttons_and_text_widget)
         hbox_buttons_and_text.addLayout(grid_layout)
         hbox_buttons_and_text.addWidget(self.left_bottom_text)
 
-        # Set up vertical layouts for left and right sides
         vbox_left = QVBoxLayout()
         vbox_left.addWidget(self.left_top_label)
 
         vbox_right = QVBoxLayout()
         vbox_right.addWidget(self.right_top_label)
-        vbox_right.addWidget(buttons_and_text_widget)  # Add the new widget to the right side
+        vbox_right.addWidget(buttons_and_text_widget)
 
-        # Set up horizontal layout for the whole window
         hbox = QHBoxLayout()
-        # hbox.setSpacing(1)
         hbox.addLayout(vbox_left)
         hbox.addLayout(vbox_right)
 
-        # Set the main layout of the window and other properties
         self.setLayout(hbox)
         self.setGeometry(0, 0, 1900, 1000)
-        self.setWindowTitle('PyQt UI 示例')
+        self.setWindowTitle('Calibration UI')
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.show()
 
@@ -260,12 +253,10 @@ class MyUI(QWidget):
             self.close()
 
     def update_images(self):
-        # Load and update the left image
 
         left_pixmap = self.convert_cvimage_to_pixmap(self.left_image)
         self.left_top_label.setPixmap(left_pixmap)
 
-        # Load and update the right image
 
         right_pixmap = self.convert_cvimage_to_pixmap(self.right_image)
         self.right_top_label.setPixmap(right_pixmap)
