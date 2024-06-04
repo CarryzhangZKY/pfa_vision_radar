@@ -1,0 +1,17 @@
+torch==1.13.1
+torchvision==0.14.1
+onnx==1.16.1
+onnxruntime==1.14.1
+pyyaml==6.0
+pillow==9.5.0
+tqdm==4.64.0
+numpy==1.24.4
+opencv-python==4.5.5.64
+matplotlib==3.5.2
+pandas==1.1.5
+seaborn==0.11.2
+ipython==8.4.0
+requests==2.27.1
+flask==2.2.3
+pyserial==3.5
+PyQt5
