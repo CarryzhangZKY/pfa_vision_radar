@@ -19,7 +19,7 @@
 #### 配置环境
 1.  python3.9
 2.  pip install -r requirements.txt 
-3.  如果需要加速模型推理，请安装tensorrt版本>8.（安装教程网上有）
+3.  如需加速模型推理，请安装tensorrt版本8.6.1（安装教程网上有）
 4.  安装好tensorrt后，运行onnx2engine.py,模型转换完成后，修改main.py 573行，更换为engine模型
 
 #### 硬件要求
@@ -50,6 +50,7 @@
 1. 不仅可以tensorrt加速，理论上openvino也可以
 2. 可以修改多个机器人都进行盲区预测
 3. 遇到问题联系我，QQ：2728615481
+4. 如果对你有帮助的话帮忙点个star
 
 
 
