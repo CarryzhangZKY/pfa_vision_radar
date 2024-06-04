@@ -12,7 +12,7 @@
 #### 效果展示
 
 ![全场高亮](images/image4.jpg)
-![南部雷达排名](images/image1.jpg)
+![南部雷达](images/image1.jpg)
 ![双倍易伤](images/image2.png)
 
 
