@@ -184,7 +184,7 @@ class MyUI(QWidget):
         self.button4.setFixedSize(100, 30)
         self.button4.clicked.connect(self.button4_clicked)
         self.height = 0
-        # 加载预先选择好的图片并缩放到940x600
+        self.T = []
         if self.state == 'R':
             self.save_path = 'arrays_test_red.npy'
             right_image_path = "images/map_red.jpg"  # 替换为右边图片的路径
