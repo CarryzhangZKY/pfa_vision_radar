@@ -24,8 +24,11 @@
 4.  安装好tensorrt后，运行onnx2engine.py,模型转换完成后，修改main.py 573行，更换为engine模型
 
 #### 硬件要求
-1. USB串口（另一头需接裁判系统user串口）
-2. 有GPU的运算端，推荐RTX3060以上
+1. 海康工业相机/USB直驱相机
+2. USB串口（另一头需接裁判系统user串口）
+3. 有GPU的运算端，推荐RTX3060以上
+4. 推荐配置：相机MV-CS060-10UC-PRO（USB款），镜头5-12ｍｍ（6ｍｍ最佳）
+![输入图片说明](images/image6.JPG)
 
 
 #### 标定指南
