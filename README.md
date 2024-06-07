@@ -1,5 +1,9 @@
 # 厦门理工学院PFA战队单目相机雷达站算法开源（含机器人、装甲板识别模型）
-【全场透视！979.6s有效标记定位！｜厦门理工学院雷达机器人研发方案分享】 https://www.bilibili.com/video/BV1jD421g7ab/?share_source=copy_web&vd_source=5d75e66f2b78f3f10a6f9e4cafd5a500
+【全场透视！979.6s有效标记定位！｜厦门理工学院雷达机器人研发方案分享】 https://www.bilibili.com/video/BV1jD421g7ab/
+
+
+【RoboMaster2024青年工程师大会｜厦门理工学院雷达视觉算法设计思路分享】 https://www.bilibili.com/video/BV1uJ4m137uh/
+
 #### 简述
 
 基于此算法，使用 **任意单目相机** 和 **任意运算端** ，即可实现 **雷达站的所有功能** ，主要功能如下：
