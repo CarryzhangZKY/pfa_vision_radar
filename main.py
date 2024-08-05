@@ -329,8 +329,8 @@ def ser_send():
         # 转换为地图坐标系
         filtered_xyz = (2800 - all_filter_data[send_name][1], all_filter_data[send_name][0])
         # 转换为裁判系统单位M
-        ser_x = int(filtered_xyz[0]) * 10 / 100
-        ser_y = int(1500 - filtered_xyz[1]) * 10 / 100
+        ser_x = int(filtered_xyz[0]) * 10 / 10
+        ser_y = int(1500 - filtered_xyz[1]) * 10 / 10
         # 打包坐标数据包
         # data = build_data_radar(mapping_table.get(send_name), ser_x, ser_y)
         # packet, seq_s = build_send_packet(data, seq_s, [0x03, 0x05])
