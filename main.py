@@ -102,13 +102,13 @@ mapping_table = {
 
 # 盲区预测点位，如果没有定位模块，连接数服务器的非哨兵机器人坐标为（0,0）
 guess_table = {
-    "R1": [(110, 140), (90, 140)],
-    "R2": [(87, 110), (134, 68)],
-    "R7": [(56, 63), (56, 87)],
-    "B1": [(170, 10), (190, 10)],
+    "R1": [(1100, 1400), (900, 1400)],
+    "R2": [(870, 1100), (1340, 680)],
+    "R7": [(560, 630), (560, 870)],
+    "B1": [(1700, 100), (1900, 100)],
     # "B1": [(0, 0), (19.0, 1.0)],
-    "B2": [(193, 40), (146, 82)],
-    "B7": [(224, 87), (224, 63)],
+    "B2": [(1930, 400), (1460, 820)],
+    "B7": [(2240, 870), (2240, 603)],
     # "B7": [(0, 0), (22.4, 6.3)]
 }
 
@@ -347,8 +347,8 @@ def ser_send():
         # 转换为地图坐标系
         filtered_xyz = (all_filter_data[send_name][1], 1500 - all_filter_data[send_name][0])
         # 转换为裁判系统单位M
-        ser_x = int(filtered_xyz[0]) * 10 / 100
-        ser_y = int(1500 - filtered_xyz[1]) * 10 / 100
+        ser_x = int(filtered_xyz[0]) * 10 / 10
+        ser_y = int(1500 - filtered_xyz[1]) * 10 / 10
         # 打包坐标数据包
         # data = build_data_radar(mapping_table.get(send_name), ser_x, ser_y)
         # packet, seq_s = build_send_packet(data, seq_s, [0x03, 0x05])
@@ -755,8 +755,8 @@ while True:
                     cv2.putText(map, str(name),
                                 (int(filtered_xyz[0]) - 5, int(filtered_xyz[1]) + 5),
                                 cv2.FONT_HERSHEY_SIMPLEX, 2.5, (255, 255, 255), 5)
-                    ser_x = int(filtered_xyz[0]) * 10 / 100
-                    ser_y = int(1500 - filtered_xyz[1]) * 10 / 100
+                    ser_x = int(filtered_xyz[0]) * 10 / 10
+                    ser_y = int(1500 - filtered_xyz[1]) * 10 / 10
                     cv2.putText(map, "(" + str(ser_x) + "," + str(ser_y) + ")",
                                 (int(filtered_xyz[0]) - 100, int(filtered_xyz[1]) + 60),
                                 cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 255), 4)
