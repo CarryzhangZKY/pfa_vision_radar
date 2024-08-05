@@ -9,10 +9,8 @@ from MvImport.MvCameraControl_class import *
 import cv2
 import numpy as np
 from detect_function import YOLOv5Detector
-from RM_serial_py.ser_api import build_data_radar, build_send_packet, receive_packet, Radar_decision, \
-    build_data_decision
-
-
+from RM_serial_py.ser_api import  build_send_packet, receive_packet, Radar_decision, \
+    build_data_decision, build_data_radar_all
 
 state = 'B'  # R:红方/B:蓝方
 
@@ -104,13 +102,13 @@ mapping_table = {
 
 # 盲区预测点位，如果没有定位模块，连接数服务器的非哨兵机器人坐标为（0,0）
 guess_table = {
-    "R1": [(11.0, 14.0), (9.0, 14.0)],
-    "R2": [(8.7, 11.0), (13.4, 6.8)],
-    "R7": [(5.6, 6.3), (5.6, 8.7)],
-    "B1": [(17.0, 1.0), (19.0, 1.0)],
+    "R1": [(110, 140), (90, 140)],
+    "R2": [(87, 110), (134, 68)],
+    "R7": [(56, 63), (56, 87)],
+    "B1": [(170, 10), (190, 10)],
     # "B1": [(0, 0), (19.0, 1.0)],
-    "B2": [(19.3, 4.0), (14.6, 8.2)],
-    "B7": [(22.4, 8.7), (22.4, 6.3)],
+    "B2": [(193, 40), (146, 82)],
+    "B7": [(224, 87), (224, 63)],
     # "B7": [(0, 0), (22.4, 6.3)]
 }
 
@@ -295,10 +293,10 @@ def video_capture_get():
     global camera_image
     cam = cv2.VideoCapture(1)
     while True:
-        ret,img = cam.read()
+        ret, img = cam.read()
         if ret:
             camera_image = img
-            time.sleep(0.016) # 60fps
+            time.sleep(0.016)  # 60fps
 
 
 # 串口发送线程
@@ -326,46 +324,45 @@ def ser_send():
     }
 
     # 发送蓝方机器人坐标
-    def send_point_B(send_name, seq_s, all_filter_data):
-        front_time = time.time()
+    def send_point_B(send_name, all_filter_data):
+        # front_time = time.time()
         # 转换为地图坐标系
         filtered_xyz = (2800 - all_filter_data[send_name][1], all_filter_data[send_name][0])
         # 转换为裁判系统单位M
-        ser_x = int(filtered_xyz[0]) * 10 / 1000
-        ser_y = int(1500 - filtered_xyz[1]) * 10 / 1000
+        ser_x = int(filtered_xyz[0]) * 10 / 100
+        ser_y = int(1500 - filtered_xyz[1]) * 10 / 100
         # 打包坐标数据包
-        data = build_data_radar(mapping_table.get(send_name), ser_x, ser_y)
-        packet, seq_s = build_send_packet(data, seq_s, [0x03, 0x05])
-        ser1.write(packet)
-        back_time = time.time()
-        # 计算发送延时，动态调整
-        waste_time = back_time - front_time
-        # print("发送：",send_name, seq_s)
-        time.sleep(0.1 - waste_time)
-        return seq_s
-
+        # data = build_data_radar(mapping_table.get(send_name), ser_x, ser_y)
+        # packet, seq_s = build_send_packet(data, seq_s, [0x03, 0x05])
+        # ser1.write(packet)
+        # back_time = time.time()
+        # # 计算发送延时，动态调整
+        # waste_time = back_time - front_time
+        # # print("发送：",send_name, seq_s)
+        # time.sleep(0.1 - waste_time)
+        return ser_x,ser_y
     # 发送红发机器人坐标
-    def send_point_R(send_name, seq_s, all_filter_data):
-        front_time = time.time()
+    def send_point_R(send_name, all_filter_data):
+        # front_time = time.time()
         # 转换为地图坐标系
         filtered_xyz = (all_filter_data[send_name][1], 1500 - all_filter_data[send_name][0])
         # 转换为裁判系统单位M
-        ser_x = int(filtered_xyz[0]) * 10 / 1000
-        ser_y = int(1500 - filtered_xyz[1]) * 10 / 1000
+        ser_x = int(filtered_xyz[0]) * 10 / 100
+        ser_y = int(1500 - filtered_xyz[1]) * 10 / 100
         # 打包坐标数据包
-        data = build_data_radar(mapping_table.get(send_name), ser_x, ser_y)
-        packet, seq_s = build_send_packet(data, seq_s, [0x03, 0x05])
-        ser1.write(packet)
-        back_time = time.time()
-        # 计算发送延时，动态调整
-        waste_time = back_time - front_time
-        # print('发送：',send_name, seq_s)
-        time.sleep(0.1 - waste_time)
-        return seq_s
+        # data = build_data_radar(mapping_table.get(send_name), ser_x, ser_y)
+        # packet, seq_s = build_send_packet(data, seq_s, [0x03, 0x05])
+        # ser1.write(packet)
+        # back_time = time.time()
+        # # 计算发送延时，动态调整
+        # waste_time = back_time - front_time
+        # # print('发送：',send_name, seq_s)
+        # time.sleep(0.1 - waste_time)
+        return ser_x,ser_y
 
     # 发送盲区预测点坐标
-    def send_point_guess(send_name, seq_s, guess_time_limit):
-        front_time = time.time()
+    def send_point_guess(send_name, guess_time_limit):
+        # front_time = time.time()
         # print(guess_value_now.get(send_name),guess_value.get(send_name) ,guess_index[send_name])
         # 进度未满 and 预测进度没有涨 and 超过单点预测时间上限，同时满足则切换另一个点预测
         if guess_value_now.get(send_name) < 120 and guess_value_now.get(send_name) - guess_value.get(
@@ -375,86 +372,132 @@ def ser_send():
         if guess_value_now.get(send_name) - guess_value.get(send_name) > 0:
             guess_time[send_name] = time.time()
         # 打包坐标数据包
-        data = build_data_radar(mapping_table.get(send_name), guess_table.get(send_name)[guess_index.get(send_name)][0],
-                                guess_table.get(send_name)[guess_index.get(send_name)][1])
-        packet, seq_s = build_send_packet(data, seq_s, [0x03, 0x05])
-        ser1.write(packet)
-        back_time = time.time()
+        # data = build_data_radar(mapping_table.get(send_name), guess_table.get(send_name)[guess_index.get(send_name)][0],
+        #                         guess_table.get(send_name)[guess_index.get(send_name)][1])
+        # packet, seq_s = build_send_packet(data, seq_s, [0x03, 0x05])
+        # ser1.write(packet)
+        # back_time = time.time()
         # 计算发送延时，动态调整
-        waste_time = back_time - front_time
+        # waste_time = back_time - front_time
         # print('发送：',send_name, seq_s)
-        time.sleep(0.1 - waste_time)
-        return seq_s
+        # time.sleep(0.1 - waste_time)
+        return guess_table.get(send_name)[guess_index.get(send_name)][0],guess_table.get(send_name)[guess_index.get(send_name)][1]
 
     time_s = time.time()
     target_last = 0  # 上一帧的飞镖目标
     update_time = 0  # 上次预测点更新时间
     send_count = 0  # 信道占用数，上限为4
+    send_map = {
+        "R1": (0, 0),
+        "R2": (0, 0),
+        "R3": (0, 0),
+        "R4": (0, 0),
+        "R5": (0, 0),
+        "R6": (0, 0),
+        "R7": (0, 0),
+        "B1": (0, 0),
+        "B2": (0, 0),
+        "B3": (0, 0),
+        "B4": (0, 0),
+        "B5": (0, 0),
+        "B6": (0, 0),
+        "B7": (0, 0)
+    }
     while True:
-        guess_time_limit = send_count + 1.7  # 根据上一帧的信道占用数动态调整单点预测时间
+
+        guess_time_limit = 3 + 1.7  # 单位：秒，根据上一帧的信道占用数动态调整单点预测时间
         # print(guess_time_limit)
         send_count = 0  # 重置信道占用数
         try:
             all_filter_data = filter.get_all_data()
             if state == 'R':
-                # 英雄优先发送
-                if not guess_list.get('B1') and all_filter_data.get('B1', False):
-                    seq = send_point_B('B1', seq, all_filter_data)
-                    send_count += 1
-                # 哨兵优先发送
-                if guess_list.get('B7'):
-                    seq = send_point_guess('B7', seq, guess_time_limit)
-                    send_count += 1
-                # 未识别到哨兵，进行盲区预测
+                if not guess_list.get('B1'):
+                    if all_filter_data.get('B1', False):
+                        send_map['B1'] = send_point_B('B1', all_filter_data)
                 else:
-                    if all_filter_data.get('B7', False):
-                        seq = send_point_B('B7', seq, all_filter_data)
-                        send_count += 1
+                    send_map['B1'] = (0, 0)
+
+                if not guess_list.get('B2'):
+                    if all_filter_data.get('B2', False):
+                        send_map['B2'] = send_point_B('B2',  all_filter_data)
+                else:
+                    send_map['B2'] = (0, 0)
+
                 # 步兵3号
                 if not guess_list.get('B3'):
                     if all_filter_data.get('B3', False):
-                        seq = send_point_B('B3', seq, all_filter_data)
-                        send_count += 1
+                        send_map['B3'] = send_point_B('B3',  all_filter_data)
+                else:
+                    send_map['B3'] = (0, 0)
+
                 # 步兵4号
                 if not guess_list.get('B4'):
                     if all_filter_data.get('B4', False):
-                        seq = send_point_B('B4', seq, all_filter_data)
-                        send_count += 1
-                # 如果信道未满，发送工程
-                if send_count < 4:
-                    if not guess_list.get('B2') and all_filter_data.get('B2', False):
-                        seq = send_point_B('B2', seq, all_filter_data)
-                        send_count += 1
+                        send_map['B4'] = send_point_B('B4', all_filter_data)
+                else:
+                    send_map['B4'] = (0, 0)
 
-            if state == 'B':
-                # 英雄优先发送
-                if not guess_list.get('R1') and all_filter_data.get('R1', False):
-                    seq = send_point_R('R1', seq, all_filter_data)
-                    send_count += 1
-                # 哨兵优先发送
-                if guess_list.get('R7'):
-                    seq = send_point_guess('R7', seq, guess_time_limit)
-                    send_count += 1
+                if not guess_list.get('B5'):
+                    if all_filter_data.get('B5', False):
+                        send_map['B5'] = send_point_B('B5',  all_filter_data)
+                else:
+                    send_map['B5'] = (0, 0)
+
+                # 哨兵
+                if guess_list.get('B7'):
+                    send_map['B7'] = send_point_guess('B7', guess_time_limit)
                 # 未识别到哨兵，进行盲区预测
                 else:
-                    if all_filter_data.get('R7', False):
-                        seq = send_point_R('R7', seq, all_filter_data)
-                        send_count += 1
+                    if all_filter_data.get('B7', False):
+                        send_map['B7'] = send_point_B('B7', all_filter_data)
+
+
+            if state == 'B':
+                if not guess_list.get('R1'):
+                    if all_filter_data.get('R1', False):
+                        send_map['R1'] = send_point_R('R1', all_filter_data)
+                else:
+                    send_map['R1'] = (0, 0)
+
+                if not guess_list.get('R2'):
+                    if all_filter_data.get('R2', False):
+                        send_map['R2'] = send_point_R('R2', all_filter_data)
+                else:
+                    send_map['R2'] = (0, 0)
+
                 # 步兵3号
                 if not guess_list.get('R3'):
                     if all_filter_data.get('R3', False):
-                        seq = send_point_R('R3', seq, all_filter_data)
-                        send_count += 1
+                        send_map['R3'] = send_point_R('R3', all_filter_data)
+                else:
+                    send_map['R3'] = (0, 0)
+
                 # 步兵4号
                 if not guess_list.get('R4'):
                     if all_filter_data.get('R4', False):
-                        seq = send_point_R('R4', seq, all_filter_data)
-                        send_count += 1
-                # 如果信道未满，发送工程
-                if send_count < 4:
-                    if not guess_list.get('R2') and all_filter_data.get('R2', False):
-                        seq = send_point_R('R2', seq, all_filter_data)
-                        send_count += 1
+                        send_map['R4'] = send_point_R('R4', all_filter_data)
+                else:
+                    send_map['R4'] = (0, 0)
+
+                if not guess_list.get('R5'):
+                    if all_filter_data.get('R5', False):
+                        send_map['R5'] = send_point_R('R5', all_filter_data)
+                else:
+                    send_map['R5'] = (0, 0)
+
+                # 哨兵
+                if guess_list.get('R7'):
+                    send_map['R7'] = send_point_guess('R7', guess_time_limit)
+                # 未识别到哨兵，进行盲区预测
+                else:
+                    if all_filter_data.get('R7', False):
+                        send_map['R7'] = send_point_R('R7', all_filter_data)
+
+            ser_data = build_data_radar_all(send_map,state)
+            packet, seq = build_send_packet(ser_data, seq, [0x03, 0x05])
+            ser1.write(packet)
+            time.sleep(0.2)
+            print(send_map,seq)
             # 超过单点预测时间上限，更新上次预测的进度
             if time.time() - update_time > guess_time_limit:
                 update_time = time.time()
@@ -568,8 +611,8 @@ def ser_receive():
 filter = Filter(window_size=3, max_inactive_time=2)
 
 # 加载模型，实例化机器人检测器和装甲板检测器
-weights_path = 'models/car.onnx'  # 建议把模型转换成TRT的engine模型，推理速度提升10倍，转换方式看README
-weights_path_next = 'models/armor.onnx'
+weights_path = 'models/car.engine'  # 建议把模型转换成TRT的engine模型，推理速度提升10倍，转换方式看README
+weights_path_next = 'models/armor.engine'
 # weights_path = 'models/car.engine'
 # weights_path_next = 'models/armor.engine'
 detector = YOLOv5Detector(weights_path, data='yaml/car.yaml', conf_thres=0.1, iou_thres=0.5, max_det=14, ui=True)
@@ -577,11 +620,10 @@ detector_next = YOLOv5Detector(weights_path_next, data='yaml/armor.yaml', conf_t
                                max_det=1,
                                ui=True)
 
-ser1 = serial.Serial('COM19', 115200, timeout=1)  # 串口，替换 'COM1' 为你的串口号
+
 # 图像测试模式（获取图像根据自己的设备，在）
 camera_mode = 'test'  # 'test':测试模式,'hik':海康相机,'video':USB相机（videocapture）
-
-
+ser1 = serial.Serial('COM19', 115200, timeout=1)  # 串口，替换 'COM1' 为你的串口号
 # 串口接收线程
 thread_receive = threading.Thread(target=ser_receive, daemon=True)
 thread_receive.start()
@@ -713,15 +755,15 @@ while True:
                     cv2.putText(map, str(name),
                                 (int(filtered_xyz[0]) - 5, int(filtered_xyz[1]) + 5),
                                 cv2.FONT_HERSHEY_SIMPLEX, 2.5, (255, 255, 255), 5)
-                    ser_x = int(filtered_xyz[0]) * 10 / 1000
-                    ser_y = int(1500 - filtered_xyz[1]) * 10 / 1000
+                    ser_x = int(filtered_xyz[0]) * 10 / 100
+                    ser_y = int(1500 - filtered_xyz[1]) * 10 / 100
                     cv2.putText(map, "(" + str(ser_x) + "," + str(ser_y) + ")",
                                 (int(filtered_xyz[0]) - 100, int(filtered_xyz[1]) + 60),
                                 cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 255), 4)
 
     te = time.time()
     t_p = te - ts
-    print("fps:",1 / t_p)  # 打印帧率
+    print("fps:", 1 / t_p)  # 打印帧率
     # 绘制UI
     _ = draw_information_ui(progress_list, state, information_ui_show)
     cv2.putText(information_ui_show, "vulnerability_chances: " + str(double_vulnerability_chance),
