@@ -1,6 +1,23 @@
 import struct
 
 # CRC8校验表
+
+mapping_table = {
+    "R1": 1,
+    "R2": 2,
+    "R3": 3,
+    "R4": 4,
+    "R5": 5,
+    "R6": 6,
+    "R7": 7,
+    "B1": 101,
+    "B2": 102,
+    "B3": 103,
+    "B4": 104,
+    "B5": 105,
+    "B6": 106,
+    "B7": 107
+}
 CRC8_INIT = 0xff
 CRC8_TAB = [
     0x00, 0x5e, 0xbc, 0xe2, 0x61, 0x3f, 0xdd, 0x83, 0xc2, 0x9c, 0x7e, 0x20, 0xa3, 0xfd, 0x1f, 0x41,
@@ -83,6 +100,51 @@ def build_data_radar(target_robot_id, target_position_x, target_position_y):
     data.extend(bytearray(struct.pack('f', target_position_x)))  # x坐标 (小端)
     data.extend(bytearray(struct.pack('f', target_position_y)))  # y坐标 (小端)
     return data
+
+
+# 雷达数据部分构建示例
+def build_data_radar_all(send_map,state):
+    if state == 'R':
+        data = bytearray()
+        data.extend(bytearray(struct.pack('H', int(send_map['B1'][0]))))  # x坐标 (小端)
+        data.extend(bytearray(struct.pack('H', int(send_map['B1'][1]))))  # y坐标 (小端)
+
+        data.extend(bytearray(struct.pack('H', int(send_map['B2'][0]))))  # x坐标 (小端)
+        data.extend(bytearray(struct.pack('H', int(send_map['B2'][1]))))  # y坐标 (小端)
+
+        data.extend(bytearray(struct.pack('H', int(send_map['B3'][0]))))  # x坐标 (小端)
+        data.extend(bytearray(struct.pack('H', int(send_map['B3'][1]))))  # y坐标 (小端)
+
+        data.extend(bytearray(struct.pack('H', int(send_map['B4'][0]))))  # x坐标 (小端)
+        data.extend(bytearray(struct.pack('H', int(send_map['B4'][1]))))  # y坐标 (小端)
+
+        data.extend(bytearray(struct.pack('H', int(send_map['B5'][0]))))  # x坐标 (小端)
+        data.extend(bytearray(struct.pack('H', int(send_map['B5'][1]))))  # y坐标 (小端)
+
+        data.extend(bytearray(struct.pack('H', int(send_map['B7'][0]))))  # x坐标 (小端)
+        data.extend(bytearray(struct.pack('H', int(send_map['B7'][1]))))  # y坐标 (小端)
+    else:
+        data = bytearray()
+        data.extend(bytearray(struct.pack('H', int(send_map['R1'][0]))))  # x坐标 (小端)
+        data.extend(bytearray(struct.pack('H', int(send_map['R1'][1]))))  # y坐标 (小端)
+
+        data.extend(bytearray(struct.pack('H', int(send_map['R2'][0]))))  # x坐标 (小端)
+        data.extend(bytearray(struct.pack('H', int(send_map['R2'][1]))))  # y坐标 (小端)
+
+        data.extend(bytearray(struct.pack('H', int(send_map['R3'][0]))))  # x坐标 (小端)
+        data.extend(bytearray(struct.pack('H', int(send_map['R3'][1]))))  # y坐标 (小端)
+
+        data.extend(bytearray(struct.pack('H', int(send_map['R4'][0]))))  # x坐标 (小端)
+        data.extend(bytearray(struct.pack('H', int(send_map['R4'][1]))))  # y坐标 (小端)
+
+        data.extend(bytearray(struct.pack('H', int(send_map['R5'][0]))))  # x坐标 (小端)
+        data.extend(bytearray(struct.pack('H', int(send_map['R5'][1]))))  # y坐标 (小端)
+
+        data.extend(bytearray(struct.pack('H', int(send_map['R7'][0]))))  # x坐标 (小端)
+        data.extend(bytearray(struct.pack('H', int(send_map['R7'][1]))))  # y坐标 (小端)
+
+    return data
+
 
 
 def build_data_decision(chances,state):
