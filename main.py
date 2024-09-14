@@ -618,8 +618,8 @@ def ser_receive():
 filter = Filter(window_size=3, max_inactive_time=2)
 
 # 加载模型，实例化机器人检测器和装甲板检测器
-weights_path = 'models/car.engine'  # 建议把模型转换成TRT的engine模型，推理速度提升10倍，转换方式看README
-weights_path_next = 'models/armor.engine'
+weights_path = 'models/car.onnx'  # 建议把模型转换成TRT的engine模型，推理速度提升10倍，转换方式看README
+weights_path_next = 'models/armor.onnx'
 # weights_path = 'models/car.engine'
 # weights_path_next = 'models/armor.engine'
 detector = YOLOv5Detector(weights_path, data='yaml/car.yaml', conf_thres=0.1, iou_thres=0.5, max_det=14, ui=True)
