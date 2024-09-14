@@ -4,11 +4,15 @@ import sys
 import numpy as np
 from os import getcwd
 import cv2
-import msvcrt
+# import msvcrt
 from ctypes import *
 
 sys.path.append("./MvImport")
-from MvImport.MvCameraControl_class import *
+
+if sys.platform.startswith("win"):
+    from MvImport.MvCameraControl_class import *
+else:
+    from MvImport_Linux.MvCameraControl_class import *
 
 global img_test
 
@@ -513,7 +517,10 @@ def access_get_image(cam, active_way="getImagebuffer"):
 
 
 # 回调取图采集
-winfun_ctype = WINFUNCTYPE
+if sys.platform.startswith("win"):
+    winfun_ctype = WINFUNCTYPE
+else:
+    winfun_ctype = CFUNCTYPE
 stFrameInfo = POINTER(MV_FRAME_OUT_INFO_EX)
 pData = POINTER(c_ubyte)
 FrameInfoCallBack = winfun_ctype(None, pData, stFrameInfo, c_void_p)
@@ -710,7 +717,7 @@ def main():
         start_grab_and_get_data_size(cam)
         # 当使用 回调取流时，需要在此处添加
         print("press a key to stop grabbing.")
-        msvcrt.getch()
+        cdll.msvcrt.getch()
         # 关闭设备与销毁句柄
         close_and_destroy_device(cam)
     elif int(stdcall) == 1:
