@@ -7,11 +7,12 @@ import cv2
 # import msvcrt
 from ctypes import *
 
-sys.path.append("./MvImport")
 
-if sys.platform.startswith("win"):
+if sys.platform.startswith("win"):    
+    sys.path.append("./MvImport")
     from MvImport.MvCameraControl_class import *
 else:
+    sys.path.append("./MvImport_Linux")
     from MvImport_Linux.MvCameraControl_class import *
 
 global img_test
