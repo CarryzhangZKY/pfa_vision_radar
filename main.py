@@ -5,7 +5,14 @@ import serial
 from information_ui import draw_information_ui
 from hik_camera import call_back_get_image, start_grab_and_get_data_size, close_and_destroy_device, set_Value, \
     get_Value, image_control
-from MvImport.MvCameraControl_class import *
+    
+import sys
+
+if sys.platform.startswith("win"):
+    from MvImport.MvCameraControl_class import *
+else:
+    from MvImport_Linux.MvCameraControl_class import *
+
 import cv2
 import numpy as np
 from detect_function import YOLOv5Detector
