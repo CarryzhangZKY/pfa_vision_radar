@@ -30,7 +30,7 @@
 
 #### 软件依赖
 1. Python3.9
-2. Windows10、Linux需更换相机驱动包
+2. Windows10、Linux（Ubuntu支持，其他Linux系统可能需要适配）
 
 
 #### 硬件要求
@@ -44,11 +44,12 @@
 #### 配置环境
 1.  pip install -r requirements.txt 
 2.  如需加速模型推理，请安装tensorrt版本8.6.1（安装教程网上有）
-3.  安装好tensorrt后，运行onnx2engine.py,模型转换完成后，修改main.py 573行，更换为engine模型
+3.  安装好tensorrt后，运行onnx2engine.py,模型转换完成后，修改main.py 621行，更换为engine模型
+4.  如需使用海康相机，请先安装好对应平台的MVS客户端，测试相机通过后再运行本项目
 
 
 #### 标定指南
-1. 每场比赛开始前，需对雷达进行标定，选择己方阵营（test模式只能为蓝方），calibration.py 374行
+1. 每场比赛开始前，需对雷达进行标定，选择己方阵营（test模式只能为蓝方），calibration.py 365行
 2. 将相机视角调节合适后，点击“开始标定”
 3. 依次点击相机视图和地图视图 **地面** 对应对应的四组、八个点（白色）后，点击切换高度
 4. 依次点击相机视图和地图视图 **R型高地** 对应对应的四组、八个点（绿色）后，点击切换高度
@@ -57,9 +58,9 @@
 
 
 #### 运行指南（标定完成后）
-1. 更改main.py 580行的串口名
-2. 修改运行模式---'test':测试模式,'hik':海康相机,'video':USB相机（videocapture）main.py 582行，默认为test
-3. 修改己方阵营，test模式只能为蓝方，main.py 17行
+1. 更改main.py 633行的串口名
+2. 修改运行模式---'test':测试模式,'hik':海康相机,'video':USB相机（videocapture）main.py 632行，默认为test
+3. 修改己方阵营，test模式只能为蓝方，main.py 22行
 4. 运行main.py文件，出现如下图所示则运行成功（标记进度全为-1表示没有连接到裁判系统）
 ![运行图例](images/image3.JPG)
 5. 在云台手端，切换飞镖锁定目标触发双倍易伤
