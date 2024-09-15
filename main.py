@@ -8,10 +8,6 @@ from hik_camera import call_back_get_image, start_grab_and_get_data_size, close_
     
 import sys
 
-if sys.platform.startswith("win"):
-    from MvImport.MvCameraControl_class import *
-else:
-    from MvImport_Linux.MvCameraControl_class import *
 
 import cv2
 import numpy as np
@@ -645,6 +641,11 @@ if camera_mode == 'test':
     camera_image = cv2.imread('images/test_image.jpg')
 elif camera_mode == 'hik':
     # 海康相机图像获取线程
+
+    if sys.platform.startswith("win"):
+        from MvImport.MvCameraControl_class import *
+    else:
+        from MvImport_Linux.MvCameraControl_class import *
     thread_camera = threading.Thread(target=hik_camera_get, daemon=True)
     thread_camera.start()
 elif camera_mode == 'video':
