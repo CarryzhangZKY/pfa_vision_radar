@@ -3,8 +3,7 @@ import time
 from collections import deque
 import serial
 from information_ui import draw_information_ui
-from hik_camera import call_back_get_image, start_grab_and_get_data_size, close_and_destroy_device, set_Value, \
-    get_Value, image_control
+
     
 import sys
 
@@ -641,7 +640,7 @@ if camera_mode == 'test':
     camera_image = cv2.imread('images/test_image.jpg')
 elif camera_mode == 'hik':
     # 海康相机图像获取线程
-
+    from hik_camera import call_back_get_image, start_grab_and_get_data_size, close_and_destroy_device, set_Value, get_Value,image_control
     if sys.platform.startswith("win"):
         from MvImport.MvCameraControl_class import *
     else:
