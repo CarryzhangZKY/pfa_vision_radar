@@ -7,10 +7,7 @@ from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPixmap, QImage, QTextCursor
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QTextEdit, QGridLayout
 
-from hik_camera import call_back_get_image, start_grab_and_get_data_size, close_and_destroy_device, set_Value, \
-    get_Value, image_control
-
-from MvImport.MvCameraControl_class import *
+import sys
 
 
 # 海康相机图像获取线程
@@ -360,7 +357,7 @@ class MyUI(QWidget):
 
 
 if __name__ == '__main__':
-    camera_mode = 'test'  # 'test':测试模式,'hik':海康相机,'video':USB相机（videocapture）
+    camera_mode = 'hik'  # 'test':测试模式,'hik':海康相机,'video':USB相机（videocapture）
     camera_image = None
     state = 'B'  # R:红方/B:蓝方
 
@@ -368,6 +365,17 @@ if __name__ == '__main__':
         camera_image = cv2.imread('images/test_image.jpg')
     elif camera_mode == 'hik':
         # 海康相机图像获取线程
+        from hik_camera import call_back_get_image, start_grab_and_get_data_size, close_and_destroy_device, set_Value, \
+            get_Value, image_control
+
+        if sys.platform.startswith("win"):
+            from MvImport.MvCameraControl_class import *
+
+            print("win")
+        else:
+            from MvImport_Linux.MvCameraControl_class import *
+
+            print('linux')
         thread_camera = threading.Thread(target=hik_camera_get, daemon=True)
         thread_camera.start()
     elif camera_mode == 'video':
